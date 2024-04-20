@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "swap-client",
+    "name": "Swap",
     "slug": "swap-client",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -32,6 +32,9 @@
         "projectId": "cbe61c65-bd63-4e51-8aa9-5adcd1346cf4"
       }
     },
-    "scheme": "com.swap"
+    "scheme": "com.swap",
+    "plugins": [
+      "expo-router"
+    ]
   }
 }

@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import { StyleSheet, View, Alert } from 'react-native';
 import { Button, Input } from 'react-native-elements';
 
-import { supabase } from '../lib/supabase';
+import { supabase } from '../../services/supabase';
 
 export default function Account({ session }: { session: Session }) {
   const [loading, setLoading] = useState(true);

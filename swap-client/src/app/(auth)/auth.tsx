@@ -5,8 +5,8 @@ import { useState } from 'react';
 import { Alert, AppState, StyleSheet, View } from 'react-native';
 import { Button, Input } from 'react-native-elements';
 
-import CountryDropdown from '../components/CountryDropdown/CountryDropdown';
-import { supabase } from '../lib/supabase';
+import CountryDropdown from '../../components/CountryDropdown/CountryDropdown';
+import { supabase } from '../../services/supabase';
 
 // Tells Supabase Auth to continuously refresh the session automatically if
 // the app is in the foreground. When this is added, you will continue to receive
@@ -45,7 +45,6 @@ export default function Auth() {
   const [username, setUsername] = useState('');
   const [countryId, setCountryId] = useState('');
   const [countryDetails, setCountryDetails] = useState({});
-  console.log(countryDetails);
 
   // TODO: Handle linking into app from email app.
   const url = Linking.useURL();
