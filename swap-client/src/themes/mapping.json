@@ -1,0 +1,15 @@
+{
+  "strict": {
+    "text-font-family": "PublicSans_700Bold",
+
+    "text-heading-6-font-family": "PublicSans_700Bold",
+    "text-heading-6-font-size": 14,
+
+    "text-subtitle-1-font-family": "PublicSans_600SemiBold",
+    "text-subtitle-1-font-size": 12,
+
+    "text-subtitle-2-font-family": "PublicSans_600SemiBold",
+    "text-subtitle-2-font-size": 18
+  },
+  "components": {}
+}

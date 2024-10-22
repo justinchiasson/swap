@@ -6,7 +6,7 @@ export default function AppLayout() {
   const { session, loading } = useAuth();
 
   if (!session) {
-    return <Redirect href="/(auth)/auth" />;
+    return <Redirect href="/(auth)/login" />;
   } else {
     return <Stack />;
   }

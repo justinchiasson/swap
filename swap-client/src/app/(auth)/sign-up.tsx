@@ -1,12 +1,14 @@
+import { Text, Input } from '@ui-kitten/components';
 import { makeRedirectUri } from 'expo-auth-session';
 import * as QueryParams from 'expo-auth-session/build/QueryParams';
 import * as Linking from 'expo-linking';
 import { useState } from 'react';
 import { Alert, AppState, StyleSheet, View } from 'react-native';
-import { Button, Input } from 'react-native-elements';
+import { Button } from 'react-native-elements';
 
 import CountryDropdown from '../../components/CountryDropdown/CountryDropdown';
 import { supabase } from '../../services/supabase';
+import { router } from 'expo-router';
 
 // Tells Supabase Auth to continuously refresh the session automatically if
 // the app is in the foreground. When this is added, you will continue to receive
@@ -38,7 +40,7 @@ const createSessionFromUrl = async (url: string) => {
   return data.session;
 };
 
-export default function Auth() {
+export default function SignUpScreen() {
   const [email, setEmail] = useState('');
   const [loading, setLoading] = useState(false);
   const [password, setPassword] = useState('');
@@ -59,6 +61,10 @@ export default function Auth() {
 
     if (error) Alert.alert(error.message);
     setLoading(false);
+  };
+
+  const redirectToLogin = () => {
+    router.replace('/(auth)/login');
   };
 
   const signUpWithEmail = async () => {
@@ -96,6 +102,7 @@ export default function Auth() {
           autoCapitalize="none"
         />
       </View>
+      <Text>testing</Text>
       <View style={styles.verticallySpaced}>
         <CountryDropdown
           selected={countryId}
@@ -106,7 +113,6 @@ export default function Auth() {
       <View style={[styles.verticallySpaced, styles.mt20]}>
         <Input
           label="Email"
-          leftIcon={{ type: 'font-awesome', name: 'envelope' }}
           onChangeText={(text) => setEmail(text)}
           value={email}
           placeholder="email@address.com"
@@ -116,7 +122,6 @@ export default function Auth() {
       <View style={styles.verticallySpaced}>
         <Input
           label="Password"
-          leftIcon={{ type: 'font-awesome', name: 'lock' }}
           onChangeText={(text) => setPassword(text)}
           value={password}
           secureTextEntry
@@ -128,7 +133,7 @@ export default function Auth() {
         <Button
           title="Sign in"
           disabled={loading}
-          onPress={() => signInWithEmail()}
+          onPress={() => redirectToLogin()}
         />
       </View>
       <View style={styles.verticallySpaced}>
