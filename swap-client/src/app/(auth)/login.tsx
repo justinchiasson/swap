@@ -1,4 +1,4 @@
-import { Text } from '@ui-kitten/components';
+import { Text, useTheme } from '@ui-kitten/components';
 import { router } from 'expo-router';
 import { useState } from 'react';
 import { Alert, ScrollView, StyleSheet, View } from 'react-native';
@@ -14,6 +14,7 @@ export default function LoginScreen() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
+  const theme = useTheme();
 
   const styles = StyleSheet.create({
     container: {
@@ -38,6 +39,7 @@ export default function LoginScreen() {
       justifyContent: 'flex-end',
     },
     forgotPassword: {
+      color: theme['color-info-500'],
       marginTop: -7,
       marginBottom: 4,
     },
@@ -96,7 +98,6 @@ export default function LoginScreen() {
       <TextButton
         text="Log In"
         onPress={loginWithEmail}
-        appearance="light"
         style={styles.loginButton}
       />
       <TextDivider text="or" style={styles.divider} />

@@ -9,11 +9,9 @@ const TextButton = ({ text, onPress, appearance, style }: TextButtonProps) => {
     card: {
       backgroundColor:
         appearance === 'light'
-          ? theme['text-basic-color']
-          : theme['color-primary-500'],
+          ? theme['color-primary-500']
+          : theme['color-info-500'],
       borderRadius: 7,
-      borderColor: theme['color-primary-700'],
-      borderWidth: appearance === 'light' ? 0 : 1,
       marginBottom: 8,
       width: '33%',
       height: 50,
@@ -23,8 +21,8 @@ const TextButton = ({ text, onPress, appearance, style }: TextButtonProps) => {
     text: {
       color:
         appearance === 'light'
-          ? theme['color-primary-500']
-          : theme['text-basic-color'],
+          ? theme['text-basic-color']
+          : theme['color-basic-500'],
       textAlign: 'center',
       marginTop: appearance === 'light' ? 0 : -1,
     },

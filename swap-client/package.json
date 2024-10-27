@@ -11,7 +11,7 @@
   },
   "dependencies": {
     "@eva-design/eva": "^2.2.0",
-    "@expo-google-fonts/public-sans": "^0.2.3",
+    "@expo-google-fonts/plus-jakarta-sans": "^0.2.3",
     "@react-native-async-storage/async-storage": "1.21.0",
     "@supabase/supabase-js": "^2.39.7",
     "@ui-kitten/components": "^5.3.1",

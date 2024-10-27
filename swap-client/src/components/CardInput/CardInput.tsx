@@ -16,14 +16,15 @@ const CardInput = ({
 
   const styles = StyleSheet.create({
     card: {
-      backgroundColor: theme['text-basic-color'],
+      backgroundColor: theme['color-basic-500'],
       borderRadius: 10,
       marginBottom: 15,
       overflow: 'visible',
       width: '75%',
+      borderColor: theme['text-basic-color'],
     },
     focusedCard: {
-      backgroundColor: theme['text-basic-color'],
+      backgroundColor: theme['color-basic-500'],
       borderRadius: 10,
       marginBottom: 15,
       shadowColor: theme['text-primary-color'],
@@ -36,21 +37,20 @@ const CardInput = ({
       elevation: 5,
       overflow: 'visible',
       width: '75%',
+      borderColor: theme['text-basic-color'],
     },
     input: {
-      backgroundColor: theme['text-basic-color'],
+      backgroundColor: theme['color-basic-500'],
       borderWidth: 0,
       marginHorizontal: -20,
       marginBottom: -10,
       marginTop: -7,
-      color: theme['color-basic-500'],
     },
     inputText: {
-      color: theme['text-primary-color'],
-      fontFamily: 'PublicSans_400Regular',
+      fontFamily: 'PlusJakartaSans_500Medium',
     },
     label: {
-      color: theme['color-basic-500'],
+      color: theme['color-info-500'],
       marginBottom: 5,
       marginTop: -5,
       marginLeft: -10,
@@ -72,7 +72,6 @@ const CardInput = ({
 
   return (
     <Card
-      appearance="filled"
       style={focused ? styles.focusedCard : styles.card}
       onPress={() => onCardFocus()}
     >
@@ -88,7 +87,7 @@ const CardInput = ({
         style={styles.input}
         textStyle={styles.inputText}
         ref={inputRef}
-        selectionColor={theme['color-primary-500']}
+        selectionColor={theme['text-basic-color']}
         onFocus={() => onInputFocus()}
         onBlur={() => onInputBlur()}
       />

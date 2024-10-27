@@ -1,28 +1,33 @@
 import * as eva from '@eva-design/eva';
 import {
-  PublicSans_400Regular,
-  PublicSans_600SemiBold,
-  PublicSans_700Bold,
+  PlusJakartaSans_500Medium,
+  PlusJakartaSans_700Bold,
   useFonts,
-} from '@expo-google-fonts/public-sans';
+} from '@expo-google-fonts/plus-jakarta-sans';
 import { ApplicationProvider } from '@ui-kitten/components';
 import { Slot } from 'expo-router';
+import * as SplashScreen from 'expo-splash-screen';
 import { useEffect } from 'react';
 
 import AuthProvider from '../providers/AuthProvider';
 import { default as mapping } from '../themes/mapping.json';
-import { default as darkTheme } from '../themes/theme-dark.json';
+import { default as lightTheme } from '../themes/theme-light.json';
+
+SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
   const [fontsLoaded, fontError] = useFonts({
-    PublicSans_400Regular,
-    PublicSans_600SemiBold,
-    PublicSans_700Bold,
+    PlusJakartaSans_500Medium,
+    PlusJakartaSans_700Bold,
+    BroadsheetLdo_Regular: require('../../assets/fonts/BroadsheetLdo-vmGL.ttf'),
+    BroadsheetLdo_Bold: require('../../assets/fonts/BroadsheetLdoBold-w1W9.ttf'),
+    BroadsheetLdo_Italic: require('../../assets/fonts/BroadsheetLdoItalic-mLyv.ttf'),
+    BroadsheetLdo_BoldItalic: require('../../assets/fonts/BroadsheetLdoBoldItalic-7BKD.ttf'),
   });
 
   useEffect(() => {
     if (fontsLoaded || fontError) {
-      // TODO: Hide splash screen
+      SplashScreen.hideAsync();
     }
   }, [fontsLoaded, fontError]);
 
@@ -31,7 +36,7 @@ export default function RootLayout() {
   }
 
   return (
-    <ApplicationProvider {...eva} theme={darkTheme} customMapping={mapping}>
+    <ApplicationProvider {...eva} theme={lightTheme} customMapping={mapping}>
       <AuthProvider>
         <Slot />
       </AuthProvider>

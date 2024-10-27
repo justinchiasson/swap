@@ -26,7 +26,7 @@ const TextDivider = ({ text, style }: TextWithDividerProps) => {
   return (
     <View style={styles.container}>
       <View style={styles.divider} />
-      <Text category="s2" style={styles.text}>
+      <Text category="c1" style={styles.text}>
         {text}
       </Text>
       <View style={styles.divider} />

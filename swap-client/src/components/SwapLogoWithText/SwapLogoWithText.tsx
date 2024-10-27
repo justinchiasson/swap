@@ -14,6 +14,7 @@ const SwapLogoWithText = () => {
     text: {
       fontSize: 48,
       marginLeft: 10,
+      marginBottom: 10,
     },
   });
 
@@ -21,7 +22,7 @@ const SwapLogoWithText = () => {
     <View style={styles.container}>
       <SwapLogo />
       <Text category="h1" style={styles.text}>
-        Swap
+        swap
       </Text>
     </View>
   );
