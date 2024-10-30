@@ -1,6 +1,6 @@
 import { Text, useTheme } from '@ui-kitten/components';
 import { router } from 'expo-router';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Alert, ScrollView, StyleSheet, View } from 'react-native';
 
 import CardInput from '../../components/CardInput/CardInput';
@@ -9,10 +9,12 @@ import TextButton from '../../components/TextButton/TextButton';
 import TextDivider from '../../components/TextDivider/TextDivider';
 import TextLink from '../../components/TextLink/TextLink';
 import { supabase } from '../../services/supabase';
+import Spinner from '../../components/Spinner/Spinner';
 
 export default function LoginScreen() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [loginEnabled, setLoginEnabled] = useState(false);
   const [loading, setLoading] = useState(false);
   const theme = useTheme();
 
@@ -45,6 +47,10 @@ export default function LoginScreen() {
     },
   });
 
+  useEffect(() => {
+    setLoginEnabled(email.length > 0 && password.length > 0);
+  }, [email, password]);
+
   const loginWithEmail = async () => {
     setLoading(true);
     const { error } = await supabase.auth.signInWithPassword({
@@ -57,11 +63,11 @@ export default function LoginScreen() {
   };
 
   const redirectToSignUp = () => {
-    router.replace('/(auth)/sign-up');
+    router.push('/(auth)/sign-up');
   };
 
   const redirectToForgotPassword = () => {
-    router.replace('/(auth)/forgot-password');
+    router.push('/(auth)/forgot-password');
   };
 
   return (
@@ -70,6 +76,7 @@ export default function LoginScreen() {
       contentInsetAdjustmentBehavior="automatic"
     >
       <SwapLogoWithText />
+      <Spinner />
       <Text category="h4" style={styles.header}>
         Welcome Back
       </Text>
@@ -99,6 +106,7 @@ export default function LoginScreen() {
         text="Log In"
         onPress={loginWithEmail}
         style={styles.loginButton}
+        enabled={loginEnabled}
       />
       <TextDivider text="or" style={styles.divider} />
       <TextButton text="Sign Up" onPress={redirectToSignUp} />

@@ -29,8 +29,8 @@ const CardInput = ({
       marginBottom: 15,
       shadowColor: theme['text-primary-color'],
       shadowOffset: {
-        width: 2,
-        height: 8,
+        width: 0,
+        height: 4,
       },
       shadowOpacity: 0.3,
       shadowRadius: 9,

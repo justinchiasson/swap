@@ -2,15 +2,30 @@ import { Text, useTheme } from '@ui-kitten/components';
 import React from 'react';
 import { StyleSheet, TouchableOpacity } from 'react-native';
 
-const TextButton = ({ text, onPress, appearance, style }: TextButtonProps) => {
+const TextButton = ({
+  text,
+  onPress,
+  appearance = 'dark',
+  style = {},
+  enabled = true,
+}: TextButtonProps) => {
   const theme = useTheme();
+
+  // Set background colour based on appearance and enabled
+  let backgroundColor;
+  if (appearance === 'light') {
+    backgroundColor = enabled
+      ? theme['color-primary-500']
+      : theme['color-primary-300'];
+  } else {
+    backgroundColor = enabled
+      ? theme['color-info-500']
+      : theme['color-info-300'];
+  }
 
   const styles = StyleSheet.create({
     card: {
-      backgroundColor:
-        appearance === 'light'
-          ? theme['color-primary-500']
-          : theme['color-info-500'],
+      backgroundColor,
       borderRadius: 7,
       marginBottom: 8,
       width: '33%',
@@ -33,6 +48,7 @@ const TextButton = ({ text, onPress, appearance, style }: TextButtonProps) => {
       style={styles.card}
       onPress={() => onPress()}
       activeOpacity={0.75}
+      disabled={!enabled}
     >
       <Text category="s2" style={styles.text}>
         {text}
@@ -60,6 +76,11 @@ interface TextButtonProps {
    * @default {}
    */
   style?: any;
+  /**
+   * If the button is enabled
+   * @default true
+   */
+  enabled?: boolean;
 }
 
 export default TextButton;
