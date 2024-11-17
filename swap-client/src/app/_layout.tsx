@@ -8,7 +8,9 @@ import { ApplicationProvider } from '@ui-kitten/components';
 import { Slot } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { useEffect } from 'react';
+import { StyleSheet, View } from 'react-native';
 
+import Spinner from '../components/Spinners/Spinner/Spinner';
 import AuthProvider from '../providers/AuthProvider';
 import { default as mapping } from '../themes/mapping.json';
 import { default as lightTheme } from '../themes/theme-light.json';
@@ -25,6 +27,14 @@ export default function RootLayout() {
     BroadsheetLdo_BoldItalic: require('../../assets/fonts/BroadsheetLdoBoldItalic-7BKD.ttf'),
   });
 
+  const styles = StyleSheet.create({
+    loadingContainer: {
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
+  });
+
   useEffect(() => {
     if (fontsLoaded || fontError) {
       SplashScreen.hideAsync();
@@ -32,7 +42,11 @@ export default function RootLayout() {
   }, [fontsLoaded, fontError]);
 
   if (!fontsLoaded && !fontError) {
-    return null;
+    return (
+      <View style={styles.loadingContainer}>
+        <Spinner />
+      </View>
+    );
   }
 
   return (

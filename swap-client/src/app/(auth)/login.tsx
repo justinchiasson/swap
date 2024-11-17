@@ -9,7 +9,6 @@ import TextButton from '../../components/TextButton/TextButton';
 import TextDivider from '../../components/TextDivider/TextDivider';
 import TextLink from '../../components/TextLink/TextLink';
 import { supabase } from '../../services/supabase';
-import Spinner from '../../components/Spinner/Spinner';
 
 export default function LoginScreen() {
   const [email, setEmail] = useState('');
@@ -76,7 +75,6 @@ export default function LoginScreen() {
       contentInsetAdjustmentBehavior="automatic"
     >
       <SwapLogoWithText />
-      <Spinner />
       <Text category="h4" style={styles.header}>
         Welcome Back
       </Text>

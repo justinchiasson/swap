@@ -6,67 +6,75 @@ import Animated, {
   runOnJS,
   useAnimatedProps,
   useSharedValue,
+  withSequence,
   withTiming,
 } from 'react-native-reanimated';
 import Svg, { Path } from 'react-native-svg';
 
 const Spinner = () => {
   const AnimatedPath = Animated.createAnimatedComponent(Path);
-  const ryUpperDisk = useSharedValue(30);
   const ryMiddleDiskUpper = useSharedValue(15);
+  const colorMiddleDiskUpper = useSharedValue(0);
   const ryMiddleDiskUpperInner = useSharedValue(4);
   const ryMiddleDiskLower = useSharedValue(0.0001);
   const ryMiddleDiskLowerInner = useSharedValue(0.0001);
-  const ryLowerDisk = useSharedValue(15);
 
   useEffect(() => {
-    startUpperDisk();
+    startMiddleDiskUpper();
+    startMiddleDiskUpperInner();
+    startMiddleDiskUpperColor();
   }, []);
 
-  const startUpperDisk = () => {
-    ryUpperDisk.value = withTiming(15, { duration: 1000 }, (finished) => {
-      if (finished) {
-        ryUpperDisk.value = 30;
-        runOnJS(startMiddleDiskUpper)();
-        runOnJS(startMiddleDiskUpperInner)();
-      }
-    });
+  const startMiddleDiskUpper = () => {
+    ryMiddleDiskUpper.value = withSequence(
+      withTiming(30, { duration: 500 }),
+      withTiming(
+        0.0001,
+        { duration: 500, easing: Easing.in(Easing.quad) },
+        (finished) => {
+          if (finished) {
+            runOnJS(startMiddleDiskLower)();
+            runOnJS(startMiddleDiskLowerInner)();
+          }
+        },
+      ),
+    );
   };
 
-  const startMiddleDiskUpper = () => {
-    ryMiddleDiskUpper.value = withTiming(
-      0,
-      { duration: 500, easing: Easing.in(Easing.quad) },
-      (finished) => {
-        if (finished) {
-          ryMiddleDiskUpper.value = 15;
-          runOnJS(startMiddleDiskLower)();
-          runOnJS(startMiddleDiskLowerInner)();
-        }
-      },
+  const startMiddleDiskUpperColor = () => {
+    colorMiddleDiskUpper.value = withSequence(
+      withTiming(15, { duration: 500 }),
+      withTiming(45, { duration: 500, easing: Easing.in(Easing.quad) }),
     );
   };
 
   const startMiddleDiskUpperInner = () => {
-    ryMiddleDiskUpperInner.value = withTiming(
-      0,
-      { duration: 500, easing: Easing.in(Easing.quad) },
-      (finished) => {
-        if (finished) {
-          ryMiddleDiskUpperInner.value = 4;
-        }
-      },
+    ryMiddleDiskUpperInner.value = withSequence(
+      withTiming(8, { duration: 500 }),
+      withTiming(
+        0.0001,
+        { duration: 500, easing: Easing.in(Easing.quad) },
+        (finished) => {
+          if (finished) {
+          }
+        },
+      ),
     );
   };
 
   const startMiddleDiskLower = () => {
+    ryMiddleDiskUpper.value = 15;
+    ryMiddleDiskUpperInner.value = 4;
+    colorMiddleDiskUpper.value = 0;
     ryMiddleDiskLower.value = withTiming(
       15,
-      { duration: 500, easing: Easing.out(Easing.quad) },
+      { duration: 250, easing: Easing.out(Easing.quad) },
       (finished) => {
         if (finished) {
           ryMiddleDiskLower.value = 0.0001;
-          runOnJS(startLowerDisk)();
+          runOnJS(startMiddleDiskUpper)();
+          runOnJS(startMiddleDiskUpperInner)();
+          runOnJS(startMiddleDiskUpperColor)();
         }
       },
     );
@@ -75,7 +83,7 @@ const Spinner = () => {
   const startMiddleDiskLowerInner = () => {
     ryMiddleDiskLowerInner.value = withTiming(
       4,
-      { duration: 500, easing: Easing.out(Easing.quad) },
+      { duration: 250, easing: Easing.out(Easing.quad) },
       (finished) => {
         if (finished) {
           ryMiddleDiskLowerInner.value = 0.0001;
@@ -84,29 +92,6 @@ const Spinner = () => {
     );
   };
 
-  const startLowerDisk = () => {
-    ryLowerDisk.value = withTiming(30, { duration: 1000 }, (finished) => {
-      if (finished) {
-        ryLowerDisk.value = 15;
-        runOnJS(startUpperDisk)();
-      }
-    });
-  };
-
-  const animatedUpperDiskProps = useAnimatedProps(() => {
-    const d = `
-      M 0 30
-      A 30 ${ryUpperDisk.value} 0 1 1 60 30
-      Z
-    `;
-    const fill = interpolateColor(
-      -ryUpperDisk.value,
-      [-30, -15],
-      ['#EBE6DA', '#D0CBBE'],
-    );
-    return { d, fill };
-  });
-
   const animatedMiddleDiskUpperProps = useAnimatedProps(() => {
     const d = `
       M 0 30
@@ -114,9 +99,9 @@ const Spinner = () => {
       Z
     `;
     const fill = interpolateColor(
-      -ryMiddleDiskUpper.value,
-      [-15, 15],
-      ['#D0CBBE', '#FFFEFB'],
+      colorMiddleDiskUpper.value,
+      [0, 45],
+      ['#D0CBBE', '#7f7a74'],
     );
     return { d, fill };
   });
@@ -128,9 +113,9 @@ const Spinner = () => {
       Z
     `;
     const fill = interpolateColor(
-      -ryMiddleDiskUpperInner.value,
-      [-4, 4],
-      ['#F28350', '#FFAC88'],
+      colorMiddleDiskUpper.value,
+      [0, 45],
+      ['#F28350', '#96573c'],
     );
     return { d, fill };
   });
@@ -163,27 +148,11 @@ const Spinner = () => {
     return { d, fill };
   });
 
-  const animatedLowerDiskProps = useAnimatedProps(() => {
-    const d = `
-      M 0 30
-      A 30 ${ryLowerDisk.value} 0 1 0 60 30
-      Z
-    `;
-    const fill = interpolateColor(
-      ryLowerDisk.value,
-      [15, 30],
-      ['#454544', '#AFA9A1'],
-    );
-    return { d, fill };
-  });
-
   return (
     <View>
       <Svg height={60} width={60}>
         <Path d="M 0 30 A 30 30 0 1 1 60 30 Z" fill="#EBE6DA" />
-        <AnimatedPath animatedProps={animatedUpperDiskProps} />
         <AnimatedPath d="M 0 30 A 30 30 0 1 0 60 30 Z" fill="#AFA9A1" />
-        <AnimatedPath animatedProps={animatedLowerDiskProps} />
         <Path d="M 0 30 A 30 15 0 1 1 60 30 Z" fill="#D0CBBE" />
         <Path d="M 0 30 A 30 15 0 1 0 60 30 Z" fill="#FFFEFB" />
         <Path d="M 22 30 A 8 4 0 1 1 38 30 Z" fill="#F28350" />
