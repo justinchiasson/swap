@@ -78,7 +78,7 @@ export default function LoginScreen() {
       >
         <SwapLogoWithText />
         <Text category="h4" style={styles.header}>
-          Welcome Back
+          Welcome back
         </Text>
         <CardInput
           label="Email"
@@ -97,19 +97,19 @@ export default function LoginScreen() {
         />
         <View style={styles.linkContainer}>
           <TextLink
-            text="Forgot Password?"
+            text="Forgot password?"
             onPress={redirectToForgotPassword}
             style={styles.forgotPassword}
           />
         </View>
         <TextButton
-          text="Log In"
+          text="Log in"
           onPress={loginWithEmail}
           style={styles.loginButton}
           enabled={loginEnabled}
         />
         <TextDivider text="or" style={styles.divider} />
-        <TextButton text="Sign Up" onPress={redirectToSignUp} />
+        <TextButton text="Sign up" onPress={redirectToSignUp} />
       </ScrollView>
       <SpinnerOverlay visible={loading} />
     </>

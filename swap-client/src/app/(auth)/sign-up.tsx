@@ -1,14 +1,16 @@
-import { Text, Input } from '@ui-kitten/components';
+import { Text } from '@ui-kitten/components';
 import { makeRedirectUri } from 'expo-auth-session';
 import * as QueryParams from 'expo-auth-session/build/QueryParams';
 import * as Linking from 'expo-linking';
-import { useState } from 'react';
-import { Alert, AppState, StyleSheet, View } from 'react-native';
-import { Button } from 'react-native-elements';
-
-import CountryDropdown from '../../components/CountryDropdown/CountryDropdown';
-import { supabase } from '../../services/supabase';
 import { router } from 'expo-router';
+import { useEffect, useState } from 'react';
+import { Alert, AppState, ScrollView, StyleSheet, View } from 'react-native';
+
+import CardInput from '../../components/CardInput/CardInput';
+import CountryDropdown from '../../components/CountryDropdown/CountryDropdown';
+import TextButton from '../../components/TextButton/TextButton';
+import TextDivider from '../../components/TextDivider/TextDivider';
+import { supabase } from '../../services/supabase';
 
 // Tells Supabase Auth to continuously refresh the session automatically if
 // the app is in the foreground. When this is added, you will continue to receive
@@ -44,9 +46,32 @@ export default function SignUpScreen() {
   const [email, setEmail] = useState('');
   const [loading, setLoading] = useState(false);
   const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
   const [username, setUsername] = useState('');
   const [countryId, setCountryId] = useState('');
   const [countryDetails, setCountryDetails] = useState({});
+  const [signUpEnabled, setSignUpEnabled] = useState(false);
+
+  const styles = StyleSheet.create({
+    container: {
+      padding: 12,
+      alignItems: 'center',
+    },
+    verticallySpaced: {
+      paddingTop: 4,
+      paddingBottom: 4,
+    },
+    mt20: {
+      marginTop: 20,
+    },
+    header: {
+      marginBottom: 15,
+    },
+    divider: {
+      width: '33%',
+      marginBottom: 10,
+    },
+  });
 
   // TODO: Handle linking into app from email app.
   const url = Linking.useURL();
@@ -66,6 +91,21 @@ export default function SignUpScreen() {
   const redirectToLogin = () => {
     router.replace('/(auth)/login');
   };
+
+  const validateEmail = (email: string) => {
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    return emailRegex.test(email);
+  };
+
+  useEffect(() => {
+    setSignUpEnabled(
+      validateEmail(email) &&
+        password.length > 0 &&
+        username.length > 0 &&
+        countryId.length > 0 &&
+        password === confirmPassword,
+    );
+  }, [email, password, username, countryId, confirmPassword]);
 
   const signUpWithEmail = async () => {
     setLoading(true);
@@ -92,17 +132,20 @@ export default function SignUpScreen() {
   };
 
   return (
-    <View style={styles.container}>
-      <View style={styles.verticallySpaced}>
-        <Input
-          label="Username"
-          onChangeText={(text) => setUsername(text)}
-          value={username}
-          placeholder="Username"
-          autoCapitalize="none"
-        />
-      </View>
-      <Text>testing</Text>
+    <ScrollView
+      contentContainerStyle={styles.container}
+      contentInsetAdjustmentBehavior="automatic"
+    >
+      <Text category="h4" style={styles.header}>
+        Create Account
+      </Text>
+      <CardInput
+        label="Username"
+        onChangeText={(text) => setUsername(text)}
+        value={username}
+        placeholder="Enter your username"
+        autoCapitalize="none"
+      />
       <View style={styles.verticallySpaced}>
         <CountryDropdown
           selected={countryId}
@@ -110,54 +153,36 @@ export default function SignUpScreen() {
           setCountryDetails={setCountryDetails}
         />
       </View>
-      <View style={[styles.verticallySpaced, styles.mt20]}>
-        <Input
-          label="Email"
-          onChangeText={(text) => setEmail(text)}
-          value={email}
-          placeholder="email@address.com"
-          autoCapitalize="none"
-        />
-      </View>
-      <View style={styles.verticallySpaced}>
-        <Input
-          label="Password"
-          onChangeText={(text) => setPassword(text)}
-          value={password}
-          secureTextEntry
-          placeholder="Password"
-          autoCapitalize="none"
-        />
-      </View>
-      <View style={[styles.verticallySpaced, styles.mt20]}>
-        <Button
-          title="Sign in"
-          disabled={loading}
-          onPress={() => redirectToLogin()}
-        />
-      </View>
-      <View style={styles.verticallySpaced}>
-        <Button
-          title="Sign up"
-          disabled={loading}
-          onPress={() => signUpWithEmail()}
-        />
-      </View>
-    </View>
+      <CardInput
+        label="Email"
+        onChangeText={(text) => setEmail(text)}
+        value={email}
+        placeholder="Enter your email address"
+        autoCapitalize="none"
+      />
+      <CardInput
+        label="Password"
+        onChangeText={(text) => setPassword(text)}
+        value={password}
+        placeholder="Enter your password"
+        secureTextEntry
+        autoCapitalize="none"
+      />
+      <CardInput
+        label="Confirm Password"
+        onChangeText={(text) => setConfirmPassword(text)}
+        value={confirmPassword}
+        placeholder="Re-type your password"
+        secureTextEntry
+        autoCapitalize="none"
+      />
+      <TextButton
+        text="Sign up"
+        onPress={signUpWithEmail}
+        enabled={signUpEnabled}
+      />
+      <TextDivider text="or" style={styles.divider} />
+      <TextButton text="Log in" onPress={redirectToLogin} />
+    </ScrollView>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    marginTop: 40,
-    padding: 12,
-  },
-  verticallySpaced: {
-    paddingTop: 4,
-    paddingBottom: 4,
-    alignSelf: 'stretch',
-  },
-  mt20: {
-    marginTop: 20,
-  },
-});
