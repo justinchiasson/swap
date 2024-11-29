@@ -46,6 +46,7 @@
   "color-danger-800": "#932263",
   "color-danger-900": "#7A1459",
   "text-basic-color": "#454544",
+  "text-basic-color-transparent": "rgba(69, 69, 68, 0.75)",
   "text-primary-color": "#000000",
   "text-control-color": "rgba(31, 26, 26, 0.5)",
   "text-hint-color": "#808080",

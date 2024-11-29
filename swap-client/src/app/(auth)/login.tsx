@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { Alert, ScrollView, StyleSheet, View } from 'react-native';
 
 import CardInput from '../../components/CardInput/CardInput';
+import SpinnerOverlay from '../../components/Spinners/SpinnerOverlay/SpinnerOverlay';
 import SwapLogoWithText from '../../components/SwapLogoWithText/SwapLogoWithText';
 import TextButton from '../../components/TextButton/TextButton';
 import TextDivider from '../../components/TextDivider/TextDivider';
@@ -70,44 +71,47 @@ export default function LoginScreen() {
   };
 
   return (
-    <ScrollView
-      contentContainerStyle={styles.container}
-      contentInsetAdjustmentBehavior="automatic"
-    >
-      <SwapLogoWithText />
-      <Text category="h4" style={styles.header}>
-        Welcome Back
-      </Text>
-      <CardInput
-        label="Email"
-        onChangeText={(text) => setEmail(text)}
-        value={email}
-        placeholder="Enter your email address"
-        autoCapitalize="none"
-      />
-      <CardInput
-        label="Password"
-        onChangeText={(text) => setPassword(text)}
-        value={password}
-        placeholder="Enter your password"
-        secureTextEntry
-        autoCapitalize="none"
-      />
-      <View style={styles.linkContainer}>
-        <TextLink
-          text="Forgot Password?"
-          onPress={redirectToForgotPassword}
-          style={styles.forgotPassword}
+    <>
+      <ScrollView
+        contentContainerStyle={styles.container}
+        contentInsetAdjustmentBehavior="automatic"
+      >
+        <SwapLogoWithText />
+        <Text category="h4" style={styles.header}>
+          Welcome Back
+        </Text>
+        <CardInput
+          label="Email"
+          onChangeText={(text) => setEmail(text)}
+          value={email}
+          placeholder="Enter your email address"
+          autoCapitalize="none"
         />
-      </View>
-      <TextButton
-        text="Log In"
-        onPress={loginWithEmail}
-        style={styles.loginButton}
-        enabled={loginEnabled}
-      />
-      <TextDivider text="or" style={styles.divider} />
-      <TextButton text="Sign Up" onPress={redirectToSignUp} />
-    </ScrollView>
+        <CardInput
+          label="Password"
+          onChangeText={(text) => setPassword(text)}
+          value={password}
+          placeholder="Enter your password"
+          secureTextEntry
+          autoCapitalize="none"
+        />
+        <View style={styles.linkContainer}>
+          <TextLink
+            text="Forgot Password?"
+            onPress={redirectToForgotPassword}
+            style={styles.forgotPassword}
+          />
+        </View>
+        <TextButton
+          text="Log In"
+          onPress={loginWithEmail}
+          style={styles.loginButton}
+          enabled={loginEnabled}
+        />
+        <TextDivider text="or" style={styles.divider} />
+        <TextButton text="Sign Up" onPress={redirectToSignUp} />
+      </ScrollView>
+      <SpinnerOverlay visible={loading} />
+    </>
   );
 }

@@ -12,7 +12,10 @@ const CardInput = ({
 }: CardInputProps) => {
   const theme = useTheme();
   const inputRef = useRef<Input | null>(null);
-  const [focused, setFocused] = React.useState(inputRef.current?.isFocused());
+  // const [focused, setFocused] = React.useState(inputRef.current?.isFocused());
+
+  // const AnimatedCard = Animated.createAnimatedComponent(Card);
+  // const shadowOpacity = useSharedValue(focused ? 0.3 : 0);
 
   const styles = StyleSheet.create({
     card: {
@@ -59,22 +62,27 @@ const CardInput = ({
 
   const onCardFocus = () => {
     inputRef.current?.focus();
-    setFocused(true);
+    //setFocused(true);
   };
 
-  const onInputFocus = () => {
-    setFocused(true);
-  };
+  // const onInputFocus = () => {
+  //   setFocused(true);
+  // };
 
-  const onInputBlur = () => {
-    setFocused(false);
-  };
+  // const onInputBlur = () => {
+  //   setFocused(false);
+  // };
+
+  // const animateShadowIn = () => {
+  //   shadowOpacity.value = withTiming(0.3);
+  // };
+
+  // const animateShadowOut = () => {
+  //   shadowOpacity.value = withTiming(0);
+  // };
 
   return (
-    <Card
-      style={focused ? styles.focusedCard : styles.card}
-      onPress={() => onCardFocus()}
-    >
+    <Card style={styles.card} onPress={() => onCardFocus()}>
       <Text category="h6" style={styles.label}>
         {label}
       </Text>
@@ -88,8 +96,8 @@ const CardInput = ({
         textStyle={styles.inputText}
         ref={inputRef}
         selectionColor={theme['text-basic-color']}
-        onFocus={() => onInputFocus()}
-        onBlur={() => onInputBlur()}
+        // onFocus={() => onInputFocus()}
+        // onBlur={() => onInputBlur()}
       />
     </Card>
   );
