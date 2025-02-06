@@ -1,98 +1,113 @@
-import React from 'react';
-import {
-  Animated,
-  FlatList,
-  Text,
-  TextInput,
-  Image,
-  TouchableOpacity,
-  View,
-  ViewStyle,
-  StyleSheet,
-} from 'react-native';
+import { Input, Text, useTheme } from '@ui-kitten/components';
+import React, { useState } from 'react';
+import { Animated, FlatList, TouchableOpacity, StyleSheet } from 'react-native';
 
-import { countries, Country, getFlag } from '../../utils/countries';
+import { countries, Country } from '../../utils/countries';
 
 interface CountryCodeProps {
   /**
-   * Selected Country Dial Code
-   */
-  selected: string;
-  /**
    * Function to set the country
    */
-  setSelected: React.Dispatch<React.SetStateAction<string>>;
-  /**
-   * Function to set the country
-   */
-  setCountryDetails: React.Dispatch<React.SetStateAction<Country>>;
-  /**
-   * Style the Country Code Container
-   */
-  countryCodeContainerStyles?: ViewStyle;
-  /**
-   * Style the text inside Country Code
-   */
-  countryCodeTextStyles?: ViewStyle;
-  /**
-   * Phone Text Input Styles
-   */
-  phoneStyles?: ViewStyle;
-  /**
-   * URL for the search Icon
-   */
-  searchIcon?: string;
-  /**
-   * URL for the close Icon
-   */
-  closeIcon?: string;
-  /**
-   * Search Input Container Styles
-   */
-  searchStyles?: ViewStyle;
-  /**
-   * Search Input Text Styles
-   */
-  searchTextStyles?: ViewStyle;
-  /**
-   /**
-  * Search Dropdown Container Styles
-  */
-  dropdownStyles?: ViewStyle;
-  /**
-   * Search Dropdown Text Styles
-   */
-  dropdownTextStyles?: ViewStyle;
+  setSelectedCallback: React.Dispatch<React.SetStateAction<string>>;
 }
 
-const CountryDropdown = ({
-  selected,
-  setSelected,
-  setCountryDetails = () => {},
-  countryCodeContainerStyles = {},
-  countryCodeTextStyles = {},
-  searchIcon,
-  closeIcon,
-  searchStyles = {},
-  searchTextStyles = {},
-  dropdownStyles = {},
-  dropdownTextStyles = {},
-}: CountryCodeProps) => {
-  const [_selected, _setSelected] = React.useState(false);
-  const [_search, _setSearch] = React.useState('');
-  const [_countries, _setCountries] = React.useState(countries);
+const CountryDropdown = ({ setSelectedCallback }: CountryCodeProps) => {
+  const theme = useTheme();
+  const [expanded, setExpanded] = useState(false);
+  const [search, setSearch] = useState('');
+  const [filteredCountries, setFilteredCountries] = useState(countries);
+  const [selectedCountryName, setSelectedCountryName] = useState('');
 
-  const slideAnim = React.useRef(new Animated.Value(0)).current;
+  const slideAnim = React.useRef(new Animated.Value(90)).current;
 
-  // const _static = {
-  //   search: searchIcon ?? require('./_inc/images/search.png'),
-  //   close: closeIcon ?? require('./_inc/images/close.png'),
-  // };
+  const styles = StyleSheet.create({
+    row: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      width: '75%',
+    },
+    container: {
+      width: '100%',
+    },
+    selectedContainer: {
+      padding: 10,
+      flexDirection: 'row',
+      minWidth: '20%',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      borderWidth: 1,
+      borderColor: theme['text-basic-color'],
+      borderRadius: 8,
+      backgroundColor: 'white',
+    },
+    valuesContainer: {
+      borderColor: theme['text-basic-color'],
+      borderTopWidth: 1,
+      maxHeight: 235,
+      minWidth: '100%',
+      marginTop: 8,
+    },
+    countryContainer: {
+      flexDirection: 'row',
+      paddingHorizontal: 15,
+      paddingVertical: 13,
+      borderTopWidth: 1,
+      borderColor: theme['text-basic-color'],
+      alignItems: 'center',
+    },
+    countryContainerFirst: {
+      flexDirection: 'row',
+      paddingHorizontal: 15,
+      paddingVertical: 13,
+      alignItems: 'center',
+    },
+    countryFlag: {
+      marginRight: 8,
+      color: 'black',
+    },
+    countryText: {
+      fontWeight: 'bold',
+    },
+    inputBoxContainer: {
+      width: '100%',
+      borderWidth: 1,
+      borderColor: theme['text-basic-color'],
+      borderRadius: 8,
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+    },
+    icon: {
+      width: 10,
+      height: 10,
+    },
+    card: {
+      // backgroundColor: theme['color-basic-500'],
+      // borderRadius: 10,
+      // borderColor: theme['text-basic-color'],
+      // borderWidth: 1,
+      minWidth: '100%',
+    },
+    label: {
+      color: theme['color-info-500'],
+      marginTop: 15,
+      marginLeft: 15,
+    },
+    input: {
+      backgroundColor: theme['color-basic-500'],
+      borderWidth: 0,
+      marginHorizontal: 5,
+      marginTop: -2,
+    },
+    inputText: {
+      fontFamily: 'PlusJakartaSans_500Medium',
+    },
+  });
 
   const slideDown = () => {
-    _setSelected(true);
+    setExpanded(true);
     Animated.timing(slideAnim, {
-      toValue: 235,
+      toValue: 250,
       duration: 1200,
       useNativeDriver: false,
     }).start();
@@ -100,178 +115,109 @@ const CountryDropdown = ({
 
   const slideUp = () => {
     Animated.timing(slideAnim, {
-      toValue: 0,
-      duration: 300,
+      toValue: 90,
+      duration: 600,
       useNativeDriver: false,
-    }).start(() => _setSelected(false));
+    }).start(() => setExpanded(false));
   };
 
   const searchCountry = (country: string) => {
-    _setSearch(country);
-    const c = countries.filter((item) => {
+    if (!expanded) {
+      slideDown();
+      setExpanded(true);
+    }
+    setSearch(country);
+    filterCountries(country);
+  };
+
+  const filterCountries = (country: string) => {
+    const listOfFilteredCountries = countries.filter((item) => {
       return item.name.includes(country);
     });
-    _setCountries(c);
+    setFilteredCountries(listOfFilteredCountries);
+  };
+
+  const onCardFocus = () => {
+    filterCountries(search);
+    slideDown();
+  };
+
+  const onInputBlur = () => {
+    setSearch(selectedCountryName);
+    slideUp();
   };
 
   const renderButton = () => {
-    if (!_selected) {
-      return (
-        <View style={[styles.row]}>
-          <TouchableOpacity
-            style={{ flexDirection: 'row' }}
-            onPress={() => {
-              _setCountries(countries);
-              slideDown();
-            }}
-          >
-            <View
-              style={[styles.selectedContainer, countryCodeContainerStyles]}
-            >
-              <Text style={{ color: '#000', marginRight: 5 }}>
-                {getFlag(selected)}
-              </Text>
-              <Text style={[countryCodeTextStyles]}>{selected}</Text>
-            </View>
-          </TouchableOpacity>
-        </View>
-      );
-    } else {
-      return (
-        <View style={[styles.inputBoxContainer, searchStyles]}>
-          <View style={[styles.row, { width: '90%' }]}>
-            {/* <Image
-              source={_static.search}
-              resizeMode="contain"
-              style={[styles.icon, { width: 15, height: 15, marginLeft: 10 }]}
-            /> */}
-            <TextInput
-              style={[
-                { marginLeft: 5, paddingVertical: 3, flex: 1 },
-                searchTextStyles,
-              ]}
-              onChangeText={searchCountry}
-              value={_search}
+    return (
+      <Animated.View
+        style={{
+          maxHeight: slideAnim,
+          width: '75%',
+          marginBottom: 15,
+          alignSelf: 'center',
+          overflow: 'hidden',
+          borderRadius: 10,
+          borderColor: theme['text-basic-color'],
+          borderWidth: 1,
+        }}
+      >
+        <TouchableOpacity style={styles.card} onPress={() => onCardFocus()}>
+          <Text category="h6" style={styles.label}>
+            Location
+          </Text>
+          <Input
+            onChangeText={searchCountry}
+            value={search}
+            placeholder="Search for a country"
+            style={styles.input}
+            textStyle={styles.inputText}
+            selectionColor={theme['text-basic-color']}
+            onFocus={() => onCardFocus()}
+            onBlur={() => onInputBlur()}
+          />
+          {expanded && (
+            <FlatList
+              data={filteredCountries}
+              style={styles.valuesContainer}
+              showsVerticalScrollIndicator={false}
+              renderItem={renderCountryItem}
+              keyExtractor={(item) => item.code}
+              ListEmptyComponent={
+                <Text style={{ padding: 15, textAlign: 'center' }}>
+                  No Result Found
+                </Text>
+              }
             />
-          </View>
-
-          <TouchableOpacity
-            onPress={() => slideUp()}
-            style={{ marginHorizontal: 10 }}
-          >
-            {/* <Image
-              source={_static.close}
-              resizeMode="contain"
-              style={styles.icon}
-            /> */}
-          </TouchableOpacity>
-        </View>
-      );
-    }
+          )}
+        </TouchableOpacity>
+      </Animated.View>
+    );
   };
 
   const renderCountryItem = ({ item }: { item: Country }) => {
+    const isFirst = filteredCountries.indexOf(item) === 0;
+
     return (
       <TouchableOpacity
-        style={styles.countryContainer}
+        style={isFirst ? styles.countryContainerFirst : styles.countryContainer}
         key={item.code}
         onPress={() => {
-          setSelected(item.name);
-          setCountryDetails(item);
+          setSelectedCallback(item.code);
+          setSelectedCountryName(item.name);
+          setSearch(item.name);
           slideUp();
         }}
       >
         <Text style={styles.countryFlag}>{item?.flag}</Text>
-        <Text style={[styles.countryText, dropdownTextStyles]}>
-          {item?.name}
-        </Text>
+        <Text style={styles.countryText}>{item?.name}</Text>
       </TouchableOpacity>
     );
   };
 
-  return (
-    <View style={styles.container}>
-      {renderButton()}
-      {_selected ? (
-        <Animated.View style={{ maxHeight: slideAnim }}>
-          <FlatList
-            data={_countries}
-            style={[styles.valuesContainer, dropdownStyles]}
-            showsVerticalScrollIndicator={false}
-            renderItem={renderCountryItem}
-            keyExtractor={(item) => item.code}
-            ListEmptyComponent={
-              <Text style={{ padding: 15, textAlign: 'center' }}>
-                No Result Found
-              </Text>
-            }
-          />
-        </Animated.View>
-      ) : (
-        <></>
-      )}
-    </View>
-  );
+  return renderButton();
 };
 
 export default CountryDropdown;
-
-const styles = StyleSheet.create({
-  row: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  container: {
-    width: '100%',
-  },
-  selectedContainer: {
-    padding: 10,
-    flexDirection: 'row',
-    minWidth: '20%',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    borderWidth: 1,
-    borderColor: '#dddddd',
-    borderRadius: 8,
-    backgroundColor: 'white',
-  },
-  valuesContainer: {
-    borderWidth: 1,
-    borderColor: '#dddddd',
-    borderRadius: 8,
-    maxHeight: 235,
-    backgroundColor: 'white',
-    marginTop: 8,
-  },
-  countryContainer: {
-    flexDirection: 'row',
-    paddingHorizontal: 15,
-    paddingVertical: 13,
-    borderBottomWidth: 1,
-    borderColor: '#dedede',
-    alignItems: 'center',
-  },
-  countryFlag: {
-    marginRight: 8,
-    color: 'black',
-  },
-  countryText: {
-    fontWeight: 'bold',
-  },
-  inputBoxContainer: {
-    width: '100%',
-    borderWidth: 1,
-    borderColor: '#dddddd',
-    borderRadius: 8,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-  icon: {
-    width: 10,
-    height: 10,
-  },
-});
 
 /* MIT License
 

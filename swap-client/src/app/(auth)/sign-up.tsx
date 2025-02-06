@@ -4,7 +4,7 @@ import * as QueryParams from 'expo-auth-session/build/QueryParams';
 import * as Linking from 'expo-linking';
 import { router } from 'expo-router';
 import { useEffect, useState } from 'react';
-import { Alert, AppState, ScrollView, StyleSheet, View } from 'react-native';
+import { Alert, AppState, SafeAreaView, StyleSheet } from 'react-native';
 
 import CardInput from '../../components/CardInput/CardInput';
 import CountryDropdown from '../../components/CountryDropdown/CountryDropdown';
@@ -49,13 +49,12 @@ export default function SignUpScreen() {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [username, setUsername] = useState('');
   const [countryId, setCountryId] = useState('');
-  const [countryDetails, setCountryDetails] = useState({});
   const [signUpEnabled, setSignUpEnabled] = useState(false);
 
   const styles = StyleSheet.create({
     container: {
-      padding: 12,
       alignItems: 'center',
+      marginTop: '25%',
     },
     verticallySpaced: {
       paddingTop: 4,
@@ -65,7 +64,7 @@ export default function SignUpScreen() {
       marginTop: 20,
     },
     header: {
-      marginBottom: 15,
+      marginBottom: 30,
     },
     divider: {
       width: '33%',
@@ -132,10 +131,7 @@ export default function SignUpScreen() {
   };
 
   return (
-    <ScrollView
-      contentContainerStyle={styles.container}
-      contentInsetAdjustmentBehavior="automatic"
-    >
+    <SafeAreaView style={styles.container}>
       <Text category="h4" style={styles.header}>
         Create Account
       </Text>
@@ -146,13 +142,7 @@ export default function SignUpScreen() {
         placeholder="Enter your username"
         autoCapitalize="none"
       />
-      <View style={styles.verticallySpaced}>
-        <CountryDropdown
-          selected={countryId}
-          setSelected={setCountryId}
-          setCountryDetails={setCountryDetails}
-        />
-      </View>
+      <CountryDropdown setSelectedCallback={setCountryId} />
       <CardInput
         label="Email"
         onChangeText={(text) => setEmail(text)}
@@ -183,6 +173,6 @@ export default function SignUpScreen() {
       />
       <TextDivider text="or" style={styles.divider} />
       <TextButton text="Log in" onPress={redirectToLogin} />
-    </ScrollView>
+    </SafeAreaView>
   );
 }
